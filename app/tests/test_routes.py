@@ -44,3 +44,22 @@ def test_output_types():
     assert all(isinstance(elem, str) for elem in response)
     assert len(response) == 3
     assert response.status_code == 200
+
+def test_post_422():
+    app = Flask(__name__)
+    configure_routes(app)
+    client = app.test_client()
+    url = '/model'
+    
+    data = {
+        "student_id": 0,
+        "failures": 0,
+        "schoolsup": True,
+        "activities": True,
+        "internet": True,
+        "studytime": 0,
+        "school": "CMU",
+    }
+
+    response = client.post(url,data=data)
+    assert response.status_code == 422
