@@ -20,7 +20,7 @@ def test_model_retrieved():
     url = '/model'
     response = client.get(url)
     assert response.status_code == 200
-
+    assert isinstance(response, list)
 
 def test_output_types():
     app = Flask(__name__)
