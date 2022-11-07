@@ -1,3 +1,4 @@
+import pickle
 import this
 from flask import Flask, jsonify, request
 import joblib
@@ -15,6 +16,11 @@ def configure_routes(app):
     def hello():
         return "try the predict route it is great!"
 
+    @app.route('/model', methods = ['GET'])
+    def getModel(): 
+        pickle_file = open("model.pkl", "r")
+        encrypted_list = pickle.load(pickle_file.stream)
+        return encrypted_list
 
     @app.route('/model', methods = ['POST'])
     def predict():
