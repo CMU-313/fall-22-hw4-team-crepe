@@ -16,17 +16,29 @@ def configure_routes(app):
         return "try the predict route it is great!"
 
 
-    @app.route('/predict')
+    @app.route('/model', methods = ['POST'])
     def predict():
+        data = request.form
         #use entries from the query string here but could also use json
-        age = request.args.get('age')
-        absences = request.args.get('absences')
-        health = request.args.get('health')
-        data = [[age], [health], [absences]]
+        
+        try: 
+            student_id = data["student_id"]
+            failures = data["failures"]
+            schoolsup = data["schoolsup"]
+            activities = data["activities"]
+            internet = data["internet"]
+            studytime = data["studytime"]
+            age = data["age"]
+        except KeyError:
+            return "Unprocessable Entity", 422 
         query_df = pd.DataFrame({
+            'student_id': pd.Series(student_id),
+            'failures': pd.Series(failures),
+            'schoolsup': pd.Series(schoolsup),
+            'activities': pd.Series(activities),
+            'internet': pd.Series(internet),
+            'studytime': pd.Series(studytime),
             'age': pd.Series(age),
-            'health': pd.Series(health),
-            'absences': pd.Series(absences)
         })
         query = pd.get_dummies(query_df)
         prediction = clf.predict(query)
