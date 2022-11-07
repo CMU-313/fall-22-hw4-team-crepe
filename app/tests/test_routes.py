@@ -20,7 +20,7 @@ def test_model_retrieved():
     url = '/model'
     response = client.get(url)
     assert response.status_code == 200
-
+    assert isinstance(response, list)
 
 def test_output_types():
     app = Flask(__name__)
@@ -63,3 +63,24 @@ def test_post_422():
 
     response = client.post(url,data=data)
     assert response.status_code == 422
+    
+def test_post_model_route_422_wrong_type():
+    app = Flask(__name__)
+    configure_routes(app)
+    client = app.test_client()
+    url = '/model'
+    data = {
+        "student_id": 0,
+        "failures": 0,
+        "schoolsup": True,
+        # Wrong type 
+        "activities": 3,
+        "internet": True,
+        "studytime": 0,
+        "school": "CMU",
+        "age": 0
+    }
+    
+    response = client.post(url, data=data)
+    
+    assert response.status_code == 422 
