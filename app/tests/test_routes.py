@@ -1,3 +1,4 @@
+import json
 from flask import Flask
 
 from app.handlers.routes import configure_routes
@@ -28,7 +29,7 @@ def test_output_types():
     client = app.test_client()
     url = '/model'
     
-    data = {
+    data = json.dumps({
         "student_id": 0,
         "failures": 0,
         "schoolsup": True,
@@ -37,9 +38,9 @@ def test_output_types():
         "studytime": 0,
         "school": "CMU",
         "age": 0
-    }
+    })
 
-    response = client.post(url,data = data)
+    response = client.post(url,json = data)
     
     assert all(isinstance(elem, str) for elem in response)
     assert len(response) == 3
@@ -51,17 +52,16 @@ def test_post_422():
     client = app.test_client()
     url = '/model'
     
-    data = {
+    data = json.dumps({
         "student_id": 0,
         "failures": 0,
         "schoolsup": True,
         "activities": True,
         "internet": True,
         "studytime": 0,
-        "school": "CMU",
-    }
+    })
 
-    response = client.post(url,data=data)
+    response = client.post(url,json=data)
     assert response.status_code == 422
     
 def test_post_model_route_422_wrong_type():
@@ -69,7 +69,7 @@ def test_post_model_route_422_wrong_type():
     configure_routes(app)
     client = app.test_client()
     url = '/model'
-    data = {
+    data = json.dumps({
         "student_id": 0,
         "failures": 0,
         "schoolsup": True,
@@ -77,10 +77,9 @@ def test_post_model_route_422_wrong_type():
         "activities": 3,
         "internet": True,
         "studytime": 0,
-        "school": "CMU",
         "age": 0
-    }
+    })
     
-    response = client.post(url, data=data)
+    response = client.post(url, json=data)
     
     assert response.status_code == 422 
