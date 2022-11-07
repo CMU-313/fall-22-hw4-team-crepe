@@ -18,28 +18,24 @@ def configure_routes(app):
 
     @app.route('/model', methods = ['POST'])
     def predict():
-        data = request.form
-        #use entries from the query string here but could also use json
-        
+        data = request.json
+        # Expected Keys
+        predict_schema = {
+            "student_id": int, 
+            "failures": int, 
+            "schoolsup": bool, 
+            "activities": bool, 
+            "internet": bool,
+            "studytime": float,
+            "age": int
+        }
         try: 
-            student_id = data["student_id"]
-            failures = data["failures"]
-            schoolsup = data["schoolsup"]
-            activities = data["activities"]
-            internet = data["internet"]
-            studytime = data["studytime"]
-            age = data["age"]
-        except KeyError:
+            predict_dict = {k:data[k] for k in predict_schema}
+            for k in predict_schema:
+                if not isinstance(predict_dict[k], predict_schema[k]): raise TypeError
+        except (KeyError, TypeError):
             return "Unprocessable Entity", 422 
-        query_df = pd.DataFrame({
-            'student_id': pd.Series(student_id),
-            'failures': pd.Series(failures),
-            'schoolsup': pd.Series(schoolsup),
-            'activities': pd.Series(activities),
-            'internet': pd.Series(internet),
-            'studytime': pd.Series(studytime),
-            'age': pd.Series(age),
-        })
+        query_df = pd.DataFrame({k:pd.Series(v) for k,v in predict_dict.items()})
         query = pd.get_dummies(query_df)
         prediction = clf.predict(query)
         return jsonify(np.asscalar(prediction))
