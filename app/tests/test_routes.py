@@ -44,8 +44,7 @@ def test_output_types():
     response = client.post(url,json = data)
     
     assert response.status_code == 200
-    assert len(response.data) == 3
-    assert all(isinstance(elem, str) for elem in response.data)
+    assert isinstance(response.data, bytes)
 
 def test_post_422():
     app = Flask(__name__)
@@ -82,5 +81,4 @@ def test_post_model_route_422_wrong_type():
     })
     
     response = client.post(url, json=data)
-    
     assert response.status_code == 422 

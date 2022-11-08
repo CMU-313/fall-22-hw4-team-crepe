@@ -41,18 +41,21 @@ def configure_routes(app):
             "famsup": bool
         }
         try:
-            # predict_dict = {}
-            # for k in predict_schema:
-            #     print(k)
-            #     print(type(k))
-            #     predict_dict[k] = data[k]
             predict_dict = {k:data[k] for k in predict_schema}
             for k in predict_schema:
                 if not isinstance(predict_dict[k], predict_schema[k]): raise TypeError
         except (KeyError, TypeError):
-            return "Unprocessable Entity", 422 
+            return "Unprocessable Entity", 422
+        # Postprocessing
+        predict_dict["schoolsup"] = int(predict_dict["schoolsup"])
+        predict_dict["paid"] = int(predict_dict["schoolsup"])
+        predict_dict["internet"]=int(predict_dict["internet"])
+        predict_dict["famsup"]=int(predict_dict["famsup"])
+         
         query_df = pd.DataFrame({k:pd.Series(v) for k,v in predict_dict.items()})
         query = pd.get_dummies(query_df)
+        print(query)
         prediction = clf.predict(query)
-        print(prediction)
-        return jsonify(np.ndarray.item(prediction))
+        response = app.make_response(str(prediction[0]))
+        response.content_type = "html/text; charset=utf-8"
+        return response 
