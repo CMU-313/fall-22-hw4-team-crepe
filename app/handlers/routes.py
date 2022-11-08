@@ -1,5 +1,6 @@
 import pickle
 import this
+import json
 from flask import Flask, jsonify, request
 import joblib
 import pandas as pd
@@ -17,25 +18,34 @@ def configure_routes(app):
         return "try the predict route it is great!"
 
     @app.route('/model', methods = ['GET'])
-    def getModel(): 
-        pickle_file = open(model_path, "r")
-        encrypted_list = pickle.load(pickle_file)
-        return encrypted_list
+    def getModel():
+        with open(model_path, "rb") as pickle_file:
+            data = pickle_file.read()
+            response = app.make_response(data) 
+            response.content_type = "application/octet-stream"
+            return response 
 
     @app.route('/model', methods = ['POST'])
     def predict():
-        data = request.json
+        data = json.loads(request.json)
         # Expected Keys
         predict_schema = {
-            "student_id": int, 
             "failures": int, 
             "schoolsup": bool, 
-            "activities": bool, 
             "internet": bool,
             "studytime": float,
-            "age": int
+            "absences": int,
+            "Medu": int,
+            "Fedu": int,
+            "paid": bool,
+            "famsup": bool
         }
-        try: 
+        try:
+            # predict_dict = {}
+            # for k in predict_schema:
+            #     print(k)
+            #     print(type(k))
+            #     predict_dict[k] = data[k]
             predict_dict = {k:data[k] for k in predict_schema}
             for k in predict_schema:
                 if not isinstance(predict_dict[k], predict_schema[k]): raise TypeError
@@ -44,4 +54,5 @@ def configure_routes(app):
         query_df = pd.DataFrame({k:pd.Series(v) for k,v in predict_dict.items()})
         query = pd.get_dummies(query_df)
         prediction = clf.predict(query)
-        return jsonify(np.asscalar(prediction))
+        print(prediction)
+        return jsonify(np.ndarray.item(prediction))
