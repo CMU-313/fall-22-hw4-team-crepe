@@ -18,8 +18,8 @@ def configure_routes(app):
 
     @app.route('/model', methods = ['GET'])
     def getModel(): 
-        pickle_file = open(model_path, "r")
-        encrypted_list = pickle.load(pickle_file.stream)
+        pickle_file = open("model.pkl", "r")
+        encrypted_list = pickle.load(pickle_file)
         return encrypted_list
 
     @app.route('/model', methods = ['POST'])
