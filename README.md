@@ -1,4 +1,4 @@
-# Updated ML Model
+# Updated ML Model to Predict Graduate Admissions
 
 Our new model makes use of the following features:
 
