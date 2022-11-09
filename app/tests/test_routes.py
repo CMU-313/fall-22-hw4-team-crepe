@@ -21,7 +21,7 @@ def test_model_retrieved():
     url = '/model'
     response = client.get(url)
     assert response.status_code == 200
-    assert isinstance(response, list)
+    assert isinstance(response.data, bytes)
 
 def test_output_types():
     app = Flask(__name__)
@@ -30,21 +30,21 @@ def test_output_types():
     url = '/model'
     
     data = json.dumps({
-        "student_id": 0,
-        "failures": 0,
-        "schoolsup": True,
-        "activities": True,
+        "failures": 0, 
+        "schoolsup": True, 
         "internet": True,
-        "studytime": 0,
-        "school": "CMU",
-        "age": 0
+        "studytime": 0.0,
+        "absences": 0,
+        "Medu": 0,
+        "Fedu": 0,
+        "paid": True,
+        "famsup": True
     })
 
     response = client.post(url,json = data)
     
-    assert all(isinstance(elem, str) for elem in response)
-    assert len(response) == 3
     assert response.status_code == 200
+    assert isinstance(response.data, bytes)
 
 def test_post_422():
     app = Flask(__name__)
@@ -81,5 +81,4 @@ def test_post_model_route_422_wrong_type():
     })
     
     response = client.post(url, json=data)
-    
     assert response.status_code == 422 
