@@ -2,15 +2,15 @@
 
 Our new model makes use of the following features:
 
-- Fedu: father's education where 0 = none, 1 = primary, 2 = 5th to 9th, 3 = secondary, 4 = higher
-- Medu: mother's education where 0 = none, 1 = primary, 2 = 5th to 9th, 3 = secondary, 4 = higher
-- absences: number of school absences (0 to 93)
-- failures: number of past class failures
-- famsup: family educational support (1 = yes, 0 = no)
-- internet: internet access at home (1 = yes, 0 = no)
-- paid: extra paid classes (Math/Portuguese) (1 = yes, 0 = no)
-- schoolsup: extra educational support (1 = yes, 0 = no)
-- studytime: weekly study time where 1 = <2h, 2 = 2 to 5h, 3 = 5 to 10h, 4 = >10h
+- **Fedu:** father's education where 0 = none, 1 = primary, 2 = 5th to 9th, 3 = secondary, 4 = higher
+- **Medu:** mother's education where 0 = none, 1 = primary, 2 = 5th to 9th, 3 = secondary, 4 = higher
+- **absences:** number of school absences (0 to 93)
+- **failures:** number of past class failures
+- **famsup:** family educational support (1 = yes, 0 = no)
+- **internet:** internet access at home (1 = yes, 0 = no)
+- **paid:** extra paid classes (Math/Portuguese) (1 = yes, 0 = no)
+- **schoolsup:** extra educational support (1 = yes, 0 = no)
+- **studytime:** weekly study time where 1 = <2h, 2 = 2 to 5h, 3 = 5 to 10h, 4 = >10h
 
 The provided code for the baseline model had a reported accuracy of approximately 50% with only three features. The improved model saw an average 31% increase in accuracy with a maximum recorded score of 84%.
 
